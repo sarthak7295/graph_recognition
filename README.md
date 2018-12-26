@@ -6,5 +6,8 @@
 the code converts image to black and white then replace circles with rectangle and numbers them 
 ![alt text](https://github.com/sarthak7295/graph_recognition/blob/master/grey.png)
 
-then recognises circles and replaces them with numbers
+then recognises circles and replaces them with unique numbers
 ![alt text](https://github.com/sarthak7295/graph_recognition/blob/master/fin.png)
+
+it then recognises the connections by edge detecction:
+![alt text](https://github.com/sarthak7295/graph_recognition/blob/master/houghlines3.png)
