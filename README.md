@@ -13,4 +13,4 @@ it then recognises the connections by edge detecction
 
 ![alt text](https://github.com/sarthak7295/graph_recognition/blob/master/houghlines3.png)
 
-the script then finds if the noes are connected by rembering the positions of circles/numbers in square --- work in progress
+the script then finds if the nodes are connected by rembering the positions of circles/numbers in square --- work in progress
