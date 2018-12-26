@@ -5,3 +5,6 @@
 
 the code converts image to black and white then replace circles with rectangle and numbers them 
 ![alt text](https://github.com/sarthak7295/graph_recognition/blob/master/grey.png)
+
+then recognises circles and replaces them with numbers
+![alt text](https://github.com/sarthak7295/graph_recognition/blob/master/fin.png)
