@@ -41,14 +41,31 @@ def write_numbers(img,circles):
         # draw the circle in the output image, then draw a rectangle
         # corresponding to the center of the circle
         # cv2.circle(output, (x, y), r,  (0, 255, 0), 4)
-        i = i + 1
-        cv2.circle(img, (x+5, y), r+10, (255, 255, 0), -1)
+        # cv2.circle(img, (x+5, y), r+10, (255, 255, 0), -1)
+        cv2.rectangle(img, (x-15, y-15), (x+24, y+20), (255, 255, 0), -1)
         if i < 99:
-            cv2.putText(img, str(i), (x-10, y+10), font, 0.65, (0, 255, 0), 2, cv2.LINE_AA)
+            cv2.putText(img, str(i), (x-10, y+10), font, 0.65, (0, 255, 0), 1, cv2.LINE_AA)
         else:
-            cv2.putText(img, str(i), (x - 10, y + 10), font, 0.4, (0, 255, 0), 1, cv2.LINE_AA)
+            cv2.putText(img, str(i), (x - 15, y + 10), font, 0.6, (0, 255, 0), 1, cv2.LINE_AA)
+        i = i + 1
     return img
 
+
+def read_circles(img,circles):
+    for (x, y, r) in circles:
+        box_img = img[y-15:y+20, x-15:x+24]
+        # box_img = cv2.cvtColor(box_img, cv2.COLOR_GRAY2BGR)
+        # dst = cv2.fastNlMeansDenoisingColored(box_img, None, 10, 10, 7, 21)
+        im_pil = Image.fromarray(box_img)
+        converter = PIL.ImageEnhance.Color(im_pil)
+        im_pil = converter.enhance(50)
+        converter2 = PIL.ImageEnhance.Contrast(im_pil)
+        im_pil = converter2.enhance(50)
+        open_cv_image = np.array(im_pil)
+        # plt.imshow(open_cv_image, cmap='gray', interpolation='bicubic')
+        # plt.show()
+        a = pytesseract.image_to_string(open_cv_image, lang='eng', config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
+        print(a)
 
 img = Image.open('myfile.png').convert('L')
 img = covert_image_greyscale(img)
@@ -63,7 +80,10 @@ img = cv2.imread('grey3.png',0)
 a = write_numbers(img,circles)
 plt.imshow(a, cmap='gray', interpolation='bicubic')
 plt.show()
-a = pytesseract.image_to_string("test.png")
-print(a)
+cv2.imwrite('fin.png',a)
+b = cv2.imread('fin.png',0)
+read_circles(b, circles)
+# a = pytesseract.image_to_string("fin.png")
+# print(a)
 # print(a)
 # find_circles(img)
