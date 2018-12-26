@@ -31,26 +31,37 @@ def find_circles(img):
     if circles is not None:
         # convert the (x, y) coordinates and radius of the circles to integers
         circles = np.round(circles[0, :]).astype("int")
+        return circles
+    return 0
 
-        # loop over the (x, y) coordinates and radius of the circles
-        for (x, y, r) in circles:
-            # draw the circle in the output image, then draw a rectangle
-            # corresponding to the center of the circle
-            cv2.circle(output, (x, y), r,  (0, 255, 0), 4)
-            cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
 
-        # show the output image
-        cv2.imshow("output", np.hstack([img, output]))
-        cv2.waitKey(0)
-    return 1
+def write_numbers(img,circles):
+    i = 1
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    for (x, y, r) in circles:
+        # draw the circle in the output image, then draw a rectangle
+        # corresponding to the center of the circle
+        # cv2.circle(output, (x, y), r,  (0, 255, 0), 4)
+        i = i + 1
+        cv2.circle(img, (x+5, y), r+10, (255, 255, 0), -1)
+        if i < 99:
+            cv2.putText(img, str(i), (x-10, y+10), font, 0.65, (0, 255, 0), 2, cv2.LINE_AA)
+        else:
+            cv2.putText(img, str(i), (x - 10, y + 10), font, 0.4, (0, 255, 0), 1, cv2.LINE_AA)
+    return img
 
 
 img = Image.open('myfile.png').convert('L')
 img = covert_image_greyscale(img)
 img.save('grey.png')
 img = cv2.imread('grey.png',0)
+cv2.imwrite('grey3.png',img)
 # img = cv2.medianBlur(img,5)
 # plt.imshow(img, cmap='gray', interpolation='bicubic')
 # plt.show()
-# find_circles(cv2.bitwise_not(img))
-find_circles(img)
+circles = find_circles(cv2.bitwise_not(img))
+img = cv2.imread('grey3.png',0)
+a = write_numbers(img,circles)
+plt.imshow(a, cmap='gray', interpolation='bicubic')
+plt.show()
+# find_circles(img)
