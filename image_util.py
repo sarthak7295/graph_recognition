@@ -22,10 +22,8 @@ def find_circles(img):
     c1 = 100
     c2 = 11
     circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, dp, image_cols / 10, param1=c1, param2=c2,minRadius=0,maxRadius=15)
-    # circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT,1,1)
-    print(circles.shape)
+    # print(circles.shape)
     # print(circles)
-    output = img.copy()
     # plt.imshow(img, cmap='gray', interpolation='bicubic')
     # plt.show()
     if circles is not None:
