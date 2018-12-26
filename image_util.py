@@ -20,10 +20,11 @@ def find_circles(img):
     image_cols = 500
     dp = 1
     c1 = 100
-    c2 = 15
-    circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, dp, image_cols / 10, param1=c1, param2=c2,minRadius=0,maxRadius=50)
+    c2 = 11
+    circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, dp, image_cols / 10, param1=c1, param2=c2,minRadius=0,maxRadius=15)
     # circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT,1,1)
-    print(circles)
+    print(circles.shape)
+    # print(circles)
     output = img.copy()
     # plt.imshow(img, cmap='gray', interpolation='bicubic')
     # plt.show()
@@ -35,7 +36,7 @@ def find_circles(img):
         for (x, y, r) in circles:
             # draw the circle in the output image, then draw a rectangle
             # corresponding to the center of the circle
-            cv2.circle(output, (x, y), r, (0, 255, 0), 4)
+            cv2.circle(output, (x, y), r,  (0, 255, 0), 4)
             cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
 
         # show the output image
@@ -51,4 +52,5 @@ img = cv2.imread('grey.png',0)
 # img = cv2.medianBlur(img,5)
 # plt.imshow(img, cmap='gray', interpolation='bicubic')
 # plt.show()
-find_circles(cv2.bitwise_not(img))
+# find_circles(cv2.bitwise_not(img))
+find_circles(img)
