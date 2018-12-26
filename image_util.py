@@ -35,7 +35,7 @@ def find_circles(img):
 
 
 def write_numbers(img,circles):
-    i = 1
+    i = 150
     font = cv2.FONT_HERSHEY_SIMPLEX
     for (x, y, r) in circles:
         # draw the circle in the output image, then draw a rectangle
@@ -82,7 +82,39 @@ plt.imshow(a, cmap='gray', interpolation='bicubic')
 plt.show()
 cv2.imwrite('fin.png',a)
 b = cv2.imread('fin.png',0)
-read_circles(b, circles)
+# read_circles(b, circles)
+
+
+############code for line ###########
+
+img1 = cv2.imread('fin.png')
+gray = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
+
+kernel_size = 5
+blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0)
+low_threshold = 100
+high_threshold = 150
+edges = cv2.Canny(blur_gray, low_threshold, high_threshold)
+rho = 1  # distance resolution in pixels of the Hough grid
+theta = np.pi / 180  # angular resolution in radians of the Hough grid
+threshold = 15  # minimum number of votes (intersections in Hough grid cell)
+min_line_length = 50  # minimum number of pixels making up a line
+max_line_gap = 20  # maximum gap in pixels between connectable line segments
+line_image = np.copy(img1) * 0  # creating a blank to draw lines on
+
+# Run Hough on edge detected image
+# Output "lines" is an array containing endpoints of detected line segments
+lines = cv2.HoughLinesP(edges, rho, theta, threshold, np.array([]),
+                    min_line_length, max_line_gap)
+
+for line in lines:
+    for x1,y1,x2,y2 in line:
+        cv2.line(line_image,(x1,y1),(x2,y2),(255,0,255),5)
+lines_edges = cv2.addWeighted(img1, 0.8, line_image, 1, 0)
+cv2.imwrite('houghlines3.png',lines_edges)
+
+
+
 # a = pytesseract.image_to_string("fin.png")
 # print(a)
 # print(a)
