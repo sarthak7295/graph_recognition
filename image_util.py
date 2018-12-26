@@ -51,6 +51,16 @@ def write_numbers(img,circles):
     return img
 
 
+def remove_boxes(img,circles):
+    for (x, y, r) in circles:
+        # draw the circle in the output image, then draw a rectangle
+        # corresponding to the center of the circle
+        # cv2.circle(output, (x, y), r,  (0, 255, 0), 4)
+        # cv2.circle(img, (x+5, y), r+10, (255, 255, 0), -1)
+        cv2.rectangle(img, (x-15, y-15), (x+24, y+20), (0, 0, 0), -1)
+    return img
+
+
 def read_circles(img,circles):
     for (x, y, r) in circles:
         box_img = img[y-15:y+20, x-15:x+24]
@@ -88,17 +98,18 @@ b = cv2.imread('fin.png',0)
 ############code for line ###########
 
 img1 = cv2.imread('fin.png')
+img1 = remove_boxes(img1,circles)
 gray = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
 
 kernel_size = 5
 blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0)
-low_threshold = 100
+low_threshold = 50
 high_threshold = 150
 edges = cv2.Canny(blur_gray, low_threshold, high_threshold)
 rho = 1  # distance resolution in pixels of the Hough grid
 theta = np.pi / 180  # angular resolution in radians of the Hough grid
 threshold = 15  # minimum number of votes (intersections in Hough grid cell)
-min_line_length = 50  # minimum number of pixels making up a line
+min_line_length = 5  # minimum number of pixels making up a line
 max_line_gap = 20  # maximum gap in pixels between connectable line segments
 line_image = np.copy(img1) * 0  # creating a blank to draw lines on
 
