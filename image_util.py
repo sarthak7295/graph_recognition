@@ -4,8 +4,9 @@ from PIL import Image
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
+import pytesseract
 
-
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
 def covert_image_greyscale(img):
     img = img.resize((500, 500), Image.ANTIALIAS)
     img = PIL.ImageOps.invert(img)
@@ -62,4 +63,7 @@ img = cv2.imread('grey3.png',0)
 a = write_numbers(img,circles)
 plt.imshow(a, cmap='gray', interpolation='bicubic')
 plt.show()
+a = pytesseract.image_to_string("test.png")
+print(a)
+# print(a)
 # find_circles(img)
