@@ -73,6 +73,7 @@ img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
 lines = detect_lines(img)
 line_image = np.copy(img) * 0  # creating a blank to draw lines on
 print(lines.shape)
+print(lines)
 for line in lines:
     for x1,y1,x2,y2 in line:
         cv2.line(line_image, (x1, y1), (x2, y2), (255, 0, 255), 1)
