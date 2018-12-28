@@ -1,11 +1,5 @@
-import PIL.ImageEnhance
-import PIL.ImageOps
-from PIL import Image
-import cv2
+import math
 import numpy as np
-from matplotlib import pyplot as plt
-import pytesseract
-
 
 class Rect:
     def __init__(self, x1, y1, x2, y2):
@@ -16,6 +10,8 @@ class Rect:
 
 
 def merge_lines(lines):
+    a = []
+    print(type(a))
     for line in lines:
         for x11, y11, x12, y12 in line:
             for line in lines:
@@ -24,8 +20,62 @@ def merge_lines(lines):
                         rect1 = Rect(x11,y11,x12,y12)
                         rect2 = Rect(x21, y21, x22, y22)
                         intersecting_rectangle = is_intersect_two(rect1, rect2)
+                        good_angle = check_angle(rect1,rect2)
+                        if intersecting_rectangle and good_angle :
+                            temp = x1, y1, x2, y2 = get_max_distance_pair(rect1,rect2)
+                            a.append(list(temp))
+    return a
 
-    return 0
+
+def lineMagnitude (x1, y1, x2, y2):
+    lineMagnitude = math.sqrt(math.pow((x2 - x1), 2)+ math.pow((y2 - y1), 2))
+    return lineMagnitude
+
+
+def get_max_distance_pair(rect1,rect2):
+    fin_x1,fin_y1,fin_x2,fin_y2 = rect1.x1,rect1.y1,rect1.x2,rect1.y2
+    x1, y1, x2, y2 = rect1.x1, rect1.y1, rect1.x2, rect1.y2
+    fin_dist = lineMagnitude(x1,y1,x2,y2)
+
+    x1, y1, x2, y2 = rect1.x1, rect1.y1, rect2.x1, rect2.y1
+    dist = lineMagnitude(x1,y1,x2,y2)
+    if(dist >= fin_dist):
+        fin_x1, fin_y1, fin_x2, fin_y2 = x1, y1, x2, y2
+        fin_dist = dist
+
+    x1, y1, x2, y2 = rect1.x1, rect1.y1, rect2.x2, rect2.y2
+    dist = lineMagnitude(x1, y1, x2, y2)
+    if (dist >= fin_dist):
+        fin_x1, fin_y1, fin_x2, fin_y2 = x1, y1, x2, y2
+        fin_dist = dist
+
+    x1, y1, x2, y2 = rect1.x2, rect1.y2, rect2.x1, rect2.y1
+    dist = lineMagnitude(x1, y1, x2, y2)
+    if (dist >= fin_dist):
+        fin_x1, fin_y1, fin_x2, fin_y2 = x1, y1, x2, y2
+        fin_dist = dist
+
+    x1, y1, x2, y2 = rect1.x2, rect1.y2, rect2.x2, rect2.y2
+    dist = lineMagnitude(x1, y1, x2, y2)
+    if (dist >= fin_dist):
+        fin_x1, fin_y1, fin_x2, fin_y2 = x1, y1, x2, y2
+        fin_dist = dist
+
+    x1, y1, x2, y2 = rect2.x1, rect2.y1, rect2.x2, rect2.y2
+    dist = lineMagnitude(x1, y1, x2, y2)
+    if (dist >= fin_dist):
+        fin_x1, fin_y1, fin_x2, fin_y2 = x1, y1, x2, y2
+
+    return fin_x1,fin_y1,fin_x2,fin_y2
+
+def check_angle(rect1,rect2):
+    vector_one = np.array([rect1.x2 - rect1.x1, rect1.y2 - rect1.y1])
+    vector_two = np.array([rect2.x2 - rect2.x1, rect2.y2 - rect2.y1])
+    cos_theta = math.fabs(np.sum(np.dot(vector_two,vector_one)/(np.absolute(vector_one)*np.absolute(vector_two))))
+    if cos_theta > 0.9:
+        return True
+    return False
+
 
 
 def is_intersect(rect1, rect2):

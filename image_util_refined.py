@@ -4,6 +4,7 @@ from PIL import Image
 import cv2
 import numpy as np
 import skeleton_creater
+import line_merging_utility as lmu
 
 def covert_image_greyscale(img):
     img = img.resize((500, 500), Image.ANTIALIAS)
@@ -72,12 +73,17 @@ img = skeleton_creater.create_skeleton(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
 img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
 lines = detect_lines(img)
 line_image = np.copy(img) * 0  # creating a blank to draw lines on
+# print(lmu.merge_lines(lines))
 print(lines.shape)
-print(lines)
+lines = lmu.merge_lines(lines)
+lines = set (lines)
+lines = np.array(lines)
+print(lines.shape)
+# print(lines)
 for line in lines:
     for x1,y1,x2,y2 in line:
         cv2.line(line_image, (x1, y1), (x2, y2), (255, 0, 255), 1)
 
 lines_edges = cv2.addWeighted(img, 0, line_image, 1, 0)
-
+# cv2.rectangle(lines_edges, (100, 100), (0, 0), (0, 255, 0), -1)
 cv2.imwrite('houghlines3.png',lines_edges)
