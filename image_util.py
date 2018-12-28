@@ -89,19 +89,24 @@ def detect_lines(img):
     low_threshold = 100
     high_threshold = 150
     edges = cv2.Canny(blur_gray, low_threshold, high_threshold)
+    # print(edges)
+    # print(img)
+    cv2.imshow("skel", gray)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     rho = 1  # distance resolution in pixels of the Hough grid
     theta = np.pi / 180  # angular resolution in radians of the Hough grid
-    threshold = 15  # minimum number of votes (intersections in Hough grid cell)
-    min_line_length = 5  # minimum number of pixels making up a line
-    max_line_gap = 20  # maximum gap in pixels between connectable line segments
+    threshold = 25  # minimum number of votes (intersections in Hough grid cell)
+    min_line_length = 15  # minimum number of pixels making up a line
+    max_line_gap = 25  # maximum gap in pixels between connectable line segments
     line_image = np.copy(img) * 0  # creating a blank to draw lines on
 
     # Run Hough on edge detected image
     # Output "lines" is an array containing endpoints of detected line segments
-    lines = cv2.HoughLinesP(edges, rho, theta, threshold, np.array([]), min_line_length, max_line_gap)
+    lines = cv2.HoughLinesP(gray, rho, theta, threshold, np.array([]), min_line_length, max_line_gap)
     return lines
 
-img = Image.open('myfile.png').convert('L')
+img = Image.open('myfile1.png').convert('L')
 img = covert_image_greyscale(img)
 img.save('grey.png')
 img = cv2.imread('grey.png',0)
@@ -141,12 +146,17 @@ cv2.imwrite("test1.png",img1)
 # # Run Hough on edge detected image
 # # Output "lines" is an array containing endpoints of detected line segments
 # lines = cv2.HoughLinesP(edges, rho, theta, threshold, np.array([]),min_line_length, max_line_gap)
-lines = detect_lines(img1)
+skel =cv2.imread("skeleton.png")
+
+# cv2.imshow("skel", skel)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
+lines = detect_lines(skel)
 line_image = np.copy(img1) * 0  # creating a blank to draw lines on
 print(lines.shape)
 for line in lines:
     for x1,y1,x2,y2 in line:
-        cv2.line(line_image,(x1,y1),(x2,y2),(255,0,255),5)
+        cv2.line(line_image,(x1,y1),(x2,y2),(255,0,255),1)
 
 lines_edges = cv2.addWeighted(img1, 0, line_image, 1, 0)
 
