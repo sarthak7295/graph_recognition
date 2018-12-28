@@ -1,5 +1,7 @@
 import math
 import numpy as np
+import cv2
+
 
 class Rect:
     def __init__(self, x1, y1, x2, y2):
@@ -11,19 +13,30 @@ class Rect:
 
 def merge_lines(lines):
     a = []
-    print(type(a))
     for line in lines:
         for x11, y11, x12, y12 in line:
             for line in lines:
                 for x21, y21, x22, y22 in line:
-                    # if ( x11, y11, x12, y12 != x21, y21, x22, y22 ):
+                    if ( x11, y11, x12, y12 != x21, y21, x22, y22 ):
                         rect1 = Rect(x11,y11,x12,y12)
                         rect2 = Rect(x21, y21, x22, y22)
+                        img = cv2.imread("drawtest.png",3)
+                        img2 = img.copy()
+                        cv2.rectangle(img, (x11, y11), (x12, y12), (255, 0, 0), -1)
+                        cv2.rectangle(img, (x21, y21), (x22, y22), (0, 255, 0), -1)
+                        cv2.line(img2, (x11, y11), (x12, y12), (255, 0, 0), 1)
+                        cv2.line(img2, (x21, y21), (x22, y22), (0, 255, 0), 1)
+                        cv2.imshow("rect", img)
+                        cv2.imshow("line", img2)
+                        cv2.waitKey(0)
+                        cv2.destroyAllWindows()
                         intersecting_rectangle = is_intersect_two(rect1, rect2)
                         good_angle = check_angle(rect1,rect2)
+                        good_distance = check_angle(rect1,rect2)
                         if intersecting_rectangle and good_angle :
-                            temp = x1, y1, x2, y2 = get_max_distance_pair(rect1,rect2)
-                            a.append(list(temp))
+                            print('merging')
+                            temp = [x1, y1, x2, y2] = get_max_distance_pair(rect1,rect2)
+                            a.append(temp)
     return a
 
 
@@ -92,3 +105,10 @@ def is_intersect_two(rect1, rect2):
     if min(rect1.y1, rect1.y2) > max(rect2.y1, rect2.y2) or max(rect1.y1, rect1.y2) < min(rect2.y1, rect2.y2):
         return False
     return True
+
+
+def shortest_distance(x1, y1, a, b, c):
+    b = 1
+    d = abs((a * x1 + b * y1 + c)) / (math.sqrt(a * a + b * b))
+    return d
+

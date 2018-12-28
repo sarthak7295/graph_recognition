@@ -76,7 +76,7 @@ line_image = np.copy(img) * 0  # creating a blank to draw lines on
 # print(lmu.merge_lines(lines))
 print(lines.shape)
 lines = lmu.merge_lines(lines)
-lines = set (lines)
+lines = list(set(lines))
 lines = np.array(lines)
 print(lines.shape)
 # print(lines)
